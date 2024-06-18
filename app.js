@@ -162,6 +162,48 @@ app.post("/studentBindSearch",(req,res)=>{
 
 })
 
+//api for delete print of student by admin
+app.post("/deletePrint", (req, res) => {
+
+    let input = req.body
+    printmodel.findByIdAndDelete(input._id).then(
+
+        (response) => {
+            res.json({"status":"deleted"})
+         }
+
+    ).catch(
+        (error)=>{
+            res.send("error")
+        }
+    )
+})
+
+
+//api for delete BIND of student by admin
+app.post("/deleteBind", (req, res) => {
+
+    let input = req.body
+    bindmodel.findByIdAndDelete(input._id).then(
+
+        (response) => {
+            res.json({"status":"deleted"})
+         }
+
+    ).catch(
+        (error)=>{
+            res.send("error")
+        }
+    )
+
+
+
+
+})
+
+
+
+
 
 
 app.listen(8080, () => {
