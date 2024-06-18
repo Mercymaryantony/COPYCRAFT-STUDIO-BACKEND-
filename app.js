@@ -85,7 +85,7 @@ app.post("/addprint",(req,res)=>{
 
 
 //api for student view
-app.post("/studentview",(req,res)=>{
+app.post("/studentviewpirnt",(req,res)=>{
 
     printmodel.find().then(
 
