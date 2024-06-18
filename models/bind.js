@@ -6,7 +6,7 @@ const schema = mongoose.Schema(
         "class":{ type: String, required: true },
         "type":{ type: String, required: true },
         "binding":{ type: String, required: true },
-        "frontcolor":" ",
+        "frontcolor":{ type: String, required: true },
         "number":{ type: String, required: true },
         "category":{ type: String, required: true },
         "date":{ type: String, required: true },
