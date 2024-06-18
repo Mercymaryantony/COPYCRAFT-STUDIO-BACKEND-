@@ -123,6 +123,47 @@ app.post("/studentviewbind",(req,res)=>{
 
 
 
+//print search for student
+app.post("/studentPrintSearch",(req,res)=>{
+
+    let input = req.body
+    printmodel.find(input).then(
+
+        (data)=>{
+            res.json(data)
+        }
+
+    ).catch(
+        (error)=>{
+            res.send("error")
+        }
+    )
+
+})
+
+
+
+
+//bind search for student
+app.post("/studentBindSearch",(req,res)=>{
+
+    let input = req.body
+    bindmodel.find(input).then(
+
+        (data)=>{
+            res.json(data)
+        }
+
+    ).catch(
+        (error)=>{
+            res.send("error")
+        }
+    )
+
+})
+
+
+
 app.listen(8080, () => {
 
     console.log("Server started")
