@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken")
 
 
 const { usermodel } = require("./models/user")
+const {printmodel} = require("./models/print")
 
 const app = express()
 app.use(cors())
@@ -21,7 +22,7 @@ const generatePassword = async (password) => {
 
 
 
-
+//api for sign Up
 app.post("/signup", async (req, res) => {
 
     let input = req.body
@@ -36,6 +37,10 @@ app.post("/signup", async (req, res) => {
 
 })
 
+
+
+
+//api for sign In
 app.post("/login",(req,res)=>{
 
     let input =req.body
@@ -67,6 +72,17 @@ app.post("/login",(req,res)=>{
     )
     })
     
+
+//api for add print details
+app.post("/addprint",(req,res)=>{
+
+    let input = req.body
+    let prints = new printmodel(input)
+    prints.save()
+    res.json({"status":"added"})
+
+})
+
 
 
 app.listen(8080, () => {
