@@ -7,7 +7,8 @@ const jwt = require("jsonwebtoken")
 
 
 const { usermodel } = require("./models/user")
-const {printmodel} = require("./models/print")
+const { printmodel } = require("./models/print")
+const { bindmodel } = require("./models/bind")
 
 const app = express()
 app.use(cors())
@@ -41,63 +42,83 @@ app.post("/signup", async (req, res) => {
 
 
 //api for sign In
-app.post("/login",(req,res)=>{
+app.post("/login", (req, res) => {
 
-    let input =req.body
-    usermodel.find({"email":req.body.email}).then(
-        (response)=>{
-            if(response.length>0)
-                {
-                    let dbPassword=response[0].password
-                    console.log(dbPassword)
-                    bcrypt.compare(input.password,dbPassword,(error,isMatch)=>{
-                        if (isMatch) {
-                            jwt.sign({email:input.email},"copycraft-app",{expiresIn:"1d"},
-                                (error,token)=>{
+    let input = req.body
+    usermodel.find({ "email": req.body.email }).then(
+        (response) => {
+            if (response.length > 0) {
+                let dbPassword = response[0].password
+                console.log(dbPassword)
+                bcrypt.compare(input.password, dbPassword, (error, isMatch) => {
+                    if (isMatch) {
+                        jwt.sign({ email: input.email }, "copycraft-app", { expiresIn: "1d" },
+                            (error, token) => {
                                 if (error) {
-                                    res.json({"status":"unable to create token"})
+                                    res.json({ "status": "unable to create token" })
                                 } else {
-                                    res.json({"status":"success","userid":response[0]._id,"token":token})
+                                    res.json({ "status": "success", "userid": response[0]._id, "token": token })
                                 }
                             })
-                        } else {
-                            res.json({"status":"incorrect password"})
-                        }
-                    })
-                }
-            else{
-                res.json({"status":"user not found"})
+                    } else {
+                        res.json({ "status": "incorrect password" })
+                    }
+                })
+            }
+            else {
+                res.json({ "status": "user not found" })
             }
         }
     )
-    })
-    
+})
+
 
 //api for add print details
-app.post("/addprint",(req,res)=>{
+app.post("/addprint", (req, res) => {
 
     let input = req.body
     let prints = new printmodel(input)
     prints.save()
-    res.json({"status":"added"})
+    res.json({ "status": "added" })
 
 })
 
+//api for add bind details
+app.post("/addbind", (req, res) => {
+    let input = req.body
+    let binds = new bindmodel(input)
+    binds.save()
+    res.json({"status":"added"})
+})
 
-//api for student view
-app.post("/studentviewpirnt",(req,res)=>{
+
+//api for student view print
+app.post("/studentviewpirnt", (req, res) => {
 
     printmodel.find().then(
 
+        (data) => {
+            res.json(data)
+        }
+    ).catch(
+        (error) => {
+            res.json(error)
+        }
+    )
+
+})
+
+//api for student view for bind
+app.post("/studentviewbind",(req,res)=>{
+    bindmodel.find().then(
         (data)=>{
             res.json(data)
-        }        
+        }
     ).catch(
         (error)=>{
             res.json(error)
         }
     )
-
 })
 
 
