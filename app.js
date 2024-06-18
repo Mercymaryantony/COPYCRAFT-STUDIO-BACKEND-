@@ -84,6 +84,23 @@ app.post("/addprint",(req,res)=>{
 })
 
 
+//api for student view
+app.post("/studentview",(req,res)=>{
+
+    printmodel.find().then(
+
+        (data)=>{
+            res.json(data)
+        }        
+    ).catch(
+        (error)=>{
+            res.json(error)
+        }
+    )
+
+})
+
+
 
 app.listen(8080, () => {
 
