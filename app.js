@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken")
 const { usermodel } = require("./models/user")
 const { printmodel } = require("./models/print")
 const { bindmodel } = require("./models/bind")
+const { adminmodel } = require("./models/admin")
 
 const app = express()
 app.use(cors())
@@ -23,7 +24,7 @@ const generatePassword = async (password) => {
 
 
 
-//api for sign Up
+//api for sign Up user
 app.post("/signup", async (req, res) => {
 
     let input = req.body
@@ -200,6 +201,59 @@ app.post("/deleteBind", (req, res) => {
 
 
 })
+
+
+//api for sign Up admin
+app.post("/adminsignup", async (req, res) => {
+
+    let input = req.body
+
+    let hashedPassword = await generatePassword(input.password)
+    console.log(hashedPassword)
+    input.password = hashedPassword
+
+    let admins = new adminmodel(input)
+    admins.save()
+    res.json({ "status": "success" })
+
+})
+
+
+
+//api for sign In for Admin
+
+app.post("/adminlogin", (req, res) => {
+
+    let input = req.body
+    adminmodel.find({ "email": req.body.email }).then(
+        (response) => {
+            if (response.length > 0) {
+                let dbPassword = response[0].password
+                console.log(dbPassword)
+                bcrypt.compare(input.password, dbPassword, (error, isMatch) => {
+                    if (isMatch) {
+                        jwt.sign({ email: input.email }, "copycraft-app", { expiresIn: "1d" },
+                            (error, token) => {
+                                if (error) {
+                                    res.json({ "status": "unable to create token" })
+                                } else {
+                                    res.json({ "status": "success", "userid": response[0]._id, "token": token })
+                                }
+                            })
+                    } else {
+                        res.json({ "status": "incorrect password" })
+                    }
+                })
+            }
+            else {
+                res.json({ "status": "user not found" })
+            }
+        }
+    )
+})
+
+
+
 
 
 
